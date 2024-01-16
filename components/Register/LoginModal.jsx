@@ -7,11 +7,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { AiOutlineEye, AiFillEye } from "react-icons/ai";
 import { AUTH } from "../../store/apiConfig";
 import axios from "axios";
 import { setLogin } from "../../store/slices/auth";
-//details
 
 export default function LoginModal({
   setLoginModalOpen,
@@ -19,12 +17,8 @@ export default function LoginModal({
   setRegisterModalOpen,
 }) {
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
   const [formError, setFormError] = useState("");
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
 
   const handleClose = () => {
     router.push("/");
@@ -34,7 +28,6 @@ export default function LoginModal({
   const handleRegisterModal = (id) => {
     if (!registerModalOpen) {
       router.push({ pathname: "/", query: { modal: "register" } });
-      // router.replace("/register", undefined, { shallow: true });
       setRegisterModalOpen(true);
       setLoginModalOpen(false);
       setTimeout(() => {
@@ -72,7 +65,6 @@ export default function LoginModal({
   const { register, handleSubmit, formState } = useForm(formOptions);
   const { errors } = formState;
   const dispatch = useDispatch();
-  // const { user } = useSelector((state) => state.auth);
   const { user, token } = useSelector((state) => state.auth);
 
   const redirectDashboard = (user) => {
@@ -84,7 +76,6 @@ export default function LoginModal({
   };
   useEffect(() => {
     token && redirectDashboard(user);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const onSubmit = (data) => {

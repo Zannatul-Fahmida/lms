@@ -11,7 +11,6 @@ export default function AccountDetails() {
   const { token } = useSelector((state) => state.auth);
   useEffect(() => {
     const data = async () => await AuthService.fetchUserDetails(token);
-    console.log({ data });
   });
   return (
     <div className="flex flex-col md:flex-row justify-between gap-4 w-full">

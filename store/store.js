@@ -28,7 +28,6 @@ const reducers = combineReducers({
   message: messageReducer,
   loading: loadingReducer,
   category: categoryReducer,
-  category: categoryReducer,
   course: courseReducer,
   singleCourse: singleCourseReducer,
 });

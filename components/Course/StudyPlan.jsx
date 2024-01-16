@@ -1,7 +1,7 @@
 import StudyCollapse from "./StudyCollapse";
 
 export default function StudyPlan({plans}) {
-  const totalModules = plans.reduce((acc, week) => acc + week.modules.length, 0);
+  const totalModules = plans?.reduce((acc, week) => acc + week.modules.length, 0);
 
   return (
     <div className="text-white my-12">
