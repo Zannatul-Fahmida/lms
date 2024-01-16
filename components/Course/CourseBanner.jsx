@@ -5,7 +5,7 @@ import { FiCheckCircle } from "react-icons/fi";
 import styles from "../../styles/Course.module.css";
 import Link from "next/link";
 
-export default function CourseBanner() {
+export default function CourseBanner({ singleCourse }) {
   const [promoCode, setPromoCode] = useState(false);
 
   const handlePromo = () => {
@@ -14,22 +14,31 @@ export default function CourseBanner() {
   const closePromo = () => {
     setPromoCode(false);
   };
+
+  const startDate = new Date(singleCourse?.startDate);
+  const endDate = new Date(singleCourse?.endDate);
+  let daysLeft;
+
+  if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+    const timeDifference = endDate.getTime() - startDate.getTime();
+    daysLeft = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+  } else {
+    console.error("Invalid startDate or endDate");
+  }
+
   return (
     <div className="flex flex-col md:flex-row md:items-center gap-10 text-white">
       <div>
         <h1 className="text-4xl md:text-5xl font-bold mb-10">
-          Web Development with PHP & Laravel
+          {singleCourse?.title}
         </h1>
-        <p className="text-base mb-10">
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout.
-        </p>
+        <p className="text-base mb-10">{singleCourse?.details?.description}</p>
         <div className="flex flex-col md:flex-row justify-between mb-16">
           <div className="mb-3 md:mb-0">
             <p style={{ color: "#0F969C" }} className="font-semibold">
               Starting Date
             </p>
-            <p className="text-sm">Monday 1 Jan </p>
+            <p className="text-sm">{singleCourse?.startDate}</p>
           </div>
           <div>
             <p style={{ color: "#0F969C" }} className="font-semibold">
@@ -88,7 +97,12 @@ export default function CourseBanner() {
       <div>
         <div className="card shadow-md">
           <figure>
-            <Image width={500} src={courseImg} alt="course title" />
+            <Image
+              width={350}
+              height={200}
+              src={singleCourse?.thumbnail}
+              alt={singleCourse?.title}
+            />
           </figure>
           <div
             style={{ border: "2px #0F969C solid" }}
@@ -102,18 +116,18 @@ export default function CourseBanner() {
                 style={{ backgroundColor: "#0f959c91" }}
                 className="btn-sm md:btn border-0 text-white"
               >
-                100 Days Left
+                {daysLeft >= 0 ? `${daysLeft} Days Left` : "Course Expired"}
               </button>
               <button
                 style={{ backgroundColor: "#0f959c91" }}
                 className="btn-sm md:btn border-0 text-white"
               >
-                100 Seats Left
+                {singleCourse?.sits} Seats Left
               </button>
             </div>
             <div style={{ borderBottom: "2px #0F969C solid" }} className="p-5">
               <div className="card-actions justify-between items-center mb-4">
-                <h3 className="text-2xl">10,000/-</h3>
+                <h3 className="text-2xl">{singleCourse?.price}/-</h3>
                 <button
                   style={{ color: "#0F969C" }}
                   className="border-0 text-white"
@@ -155,30 +169,12 @@ export default function CourseBanner() {
             <div className="p-5">
               <p className="text-lg mb-3">In This Course You Will Get</p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-1 md:gap-3">
-                <div className="flex items-center gap-1 text-sm">
-                  <FiCheckCircle />
-                  <p>4 Months Study Plan</p>
-                </div>
-                <div className="flex items-center gap-1 text-sm">
-                  <FiCheckCircle />
-                  <p>15th Module</p>
-                </div>
-                <div className="flex items-center gap-1 text-sm">
-                  <FiCheckCircle />
-                  <p>30 Live Classes</p>
-                </div>
-                <div className="flex items-center gap-1 text-sm">
-                  <FiCheckCircle />
-                  <p>Assignment</p>
-                </div>
-                <div className="flex items-center gap-1 text-sm">
-                  <FiCheckCircle />
-                  <p>6th Live Projects</p>
-                </div>
-                <div className="flex items-center gap-1 text-sm">
-                  <FiCheckCircle />
-                  <p>Job Market Guideline</p>
-                </div>
+                {singleCourse?.benifits?.map((benifit) => (
+                  <div key={benifit} className="flex items-center gap-1 text-sm">
+                    <FiCheckCircle />
+                    <p>{benifit}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

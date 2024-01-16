@@ -9,22 +9,19 @@ import Requirements from "../../../components/Course/Requirements";
 import Help from "../../../components/Course/Help";
 import Payment from "../../../components/Course/Payment";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "next/navigation";
 import { fetchSingleCourse } from "../../../store/slices/singleCourse";
+import { useRouter } from "next/router";
 
 export default function CourseDetails() {
   const dispatch = useDispatch();
-  const { courseId } = useParams();
+  const router = useRouter();
+  const { courseId } = router.query;
   const studyRef = useRef();
   const instructorRef = useRef();
   const requirementsRef = useRef();
   const helpRef = useRef();
   const [details, setDetails] = useState("study");
-  const {
-    data: singleCourse,
-    status,
-    error,
-  } = useSelector((state) => state.singleCourse);
+  const { data, status, error } = useSelector((state) => state.singleCourse);
 
   useEffect(() => {
     if (courseId) {
@@ -56,7 +53,7 @@ export default function CourseDetails() {
     <div>
       <Navbar />
       <div className={`${styles.courseBg} px-12 md:px-24 py-20`}>
-        <CourseBanner />
+        <CourseBanner singleCourse={data?.data?.course} />
         <div
           style={{ borderBottom: "2px #0F969C solid" }}
           className="flex flex-col md:flex-row md:items-center gap-4 mt-12 pb-4"
@@ -103,13 +100,13 @@ export default function CourseDetails() {
           </button>
         </div>
         <div ref={studyRef}>
-          <StudyPlan />
+          <StudyPlan plans={data?.data?.course?.studyPlan} />
         </div>
         <div ref={instructorRef}>
-          <Instructor />
+          <Instructor instructors={data?.data?.course?.instructor} />
         </div>
         <div ref={requirementsRef}>
-          <Requirements />
+          <Requirements requirements={data?.data?.course?.requirements} />
         </div>
         <div ref={helpRef}>
           <Help />

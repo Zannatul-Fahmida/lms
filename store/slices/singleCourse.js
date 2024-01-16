@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { SINGLE_COURSES } from "../apiConfig";
 
 const initialState = {
   data: null,
@@ -15,10 +16,13 @@ export const fetchSingleCourse = createAsyncThunk(
         throw new Error("Invalid courseId");
       }
 
-      const response = await axios.get(`https://online-learning-platform-backend.vercel.app/api/courses/${courseId}`);
-      return response.data;
+      const response = await axios.get(
+        `${SINGLE_COURSES.GET_SINGLE_COURSES(courseId)}`
+      );
+      return { data: response.data, error: null }; 
     } catch (error) {
-      return rejectWithValue(error.response?.data || "An error occurred");
+      console.error("Fetch Single Course Error:", error);
+      return { data: null, error: error.response?.data || "An error occurred" };
     }
   }
 );
@@ -34,11 +38,12 @@ const singleCourseSlice = createSlice({
       })
       .addCase(fetchSingleCourse.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = action.payload;
+        state.data = action.payload.data;
+        state.error = action.payload.error;
       })
       .addCase(fetchSingleCourse.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = action.payload.error; 
       });
   },
 });

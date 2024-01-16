@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function CoursesCard({ course }) {
   // const { title, teacher, ratings, price } = course;
-  const { title, _id, instructor, ratings, price } = course;
+  const { title, _id: courseId, instructor, ratings, price } = course;
 
   return (
     <div
@@ -32,7 +32,9 @@ export default function CoursesCard({ course }) {
             <AiOutlineShareAlt />
           </div>
         </div>
-        <Link href={`/course/${_id}`}><h2 className="card-title text-start text-[15px] mt-4">{title}</h2></Link>
+        <Link href={`/course/${courseId}`}>
+          <h2 className="card-title text-start text-[15px] mt-4">{title}</h2>
+        </Link>
         <div className="flex items-center" style={{ color: "#0F969C" }}>
           <AiFillStar />
           <AiFillStar />
