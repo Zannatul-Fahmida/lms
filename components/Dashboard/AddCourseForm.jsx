@@ -6,6 +6,7 @@ export default function AddCourseForm() {
   const { register, handleSubmit } = useForm();
   const [requirements, setRequirements] = useState([]);
   const [benefits, setBenefits] = useState([]);
+  const [studyPlan, setStudyPlan] = useState([]);
 
   const handleAddRequirement = () => {
     setRequirements([...requirements, ""]);
@@ -27,12 +28,37 @@ export default function AddCourseForm() {
     setBenefits(updatedBenefits);
   };
 
+  const handleAddStudyPlan = () => {
+    setStudyPlan([
+      ...studyPlan,
+      { title: "", modules: [{ title: "", type: "", src: "" }] },
+    ]);
+  };
+
+  const handleStudyPlanChange = (planIndex, field, value) => {
+    const updatedStudyPlan = [...studyPlan];
+    updatedStudyPlan[planIndex][field] = value;
+    setStudyPlan(updatedStudyPlan);
+  };
+
+  const handleAddModule = (planIndex) => {
+    const updatedStudyPlan = [...studyPlan];
+    updatedStudyPlan[planIndex].modules.push({ title: "", type: "", src: "" });
+    setStudyPlan(updatedStudyPlan);
+  };
+
+  const handleModuleChange = (planIndex, moduleIndex, field, value) => {
+    const updatedStudyPlan = [...studyPlan];
+    updatedStudyPlan[planIndex].modules[moduleIndex][field] = value;
+    setStudyPlan(updatedStudyPlan);
+  };
+
   const onSubmit = () => {};
   return (
     <div>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
-          <label className="w-full">
+          {/*<label className="w-full">
             <div className="label">
               <span className="label-text text-white">Course thumbnail</span>
             </div>
@@ -41,7 +67,7 @@ export default function AddCourseForm() {
               className={`${styles.tealBg} file-input w-full mb-4 text-white`}
               {...register("thumbnail")}
             />
-          </label>
+          </label>*/}
           <div className="grid md:grid-cols-2 gap-4">
             <input
               type="text"
@@ -99,40 +125,48 @@ export default function AddCourseForm() {
             />
           </div>
           <div className="grid md:grid-cols-2 gap-4">
-          <div className={`my-4 rounded-lg text-white`}>
-            {requirements.map((requirement, index) => (
-              <div key={index} className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Requirement"
-                  className={`${styles.tealBg} input w-full text-slate-400`}
-                  value={requirement}
-                  onChange={(e) =>
-                    handleRequirementChange(index, e.target.value)
-                  }
-                />
-              </div>
-            ))}
-            <button className={`${styles.tealBg} p-3 rounded-md`} type="button" onClick={handleAddRequirement}>
-              Add Requirement
-            </button>
-          </div>
-          <div className={`my-4 rounded-lg text-white`}>
-            {benefits.map((benefit, index) => (
-              <div key={index} className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Benefit"
-                  className={`${styles.tealBg} input w-full text-slate-400`}
-                  value={benefit}
-                  onChange={(e) => handleBenefitChange(index, e.target.value)}
-                />
-              </div>
-            ))}
-            <button className={`${styles.tealBg} p-3 rounded-md`} type="button" onClick={handleAddBenefit}>
-              Add Benefit
-            </button>
-          </div>
+            <div className={`my-4 rounded-lg text-white`}>
+              {requirements.map((requirement, index) => (
+                <div key={index} className="mb-4">
+                  <input
+                    type="text"
+                    placeholder="Requirement"
+                    className={`${styles.tealBg} input w-full text-slate-400`}
+                    value={requirement}
+                    onChange={(e) =>
+                      handleRequirementChange(index, e.target.value)
+                    }
+                  />
+                </div>
+              ))}
+              <button
+                className={`${styles.tealBg} p-3 rounded-md`}
+                type="button"
+                onClick={handleAddRequirement}
+              >
+                Add Requirement
+              </button>
+            </div>
+            <div className={`my-4 rounded-lg text-white`}>
+              {benefits.map((benefit, index) => (
+                <div key={index} className="mb-4">
+                  <input
+                    type="text"
+                    placeholder="Benefit"
+                    className={`${styles.tealBg} input w-full text-slate-400`}
+                    value={benefit}
+                    onChange={(e) => handleBenefitChange(index, e.target.value)}
+                  />
+                </div>
+              ))}
+              <button
+                className={`${styles.tealBg} p-3 rounded-md`}
+                type="button"
+                onClick={handleAddBenefit}
+              >
+                Add Benefit
+              </button>
+            </div>
           </div>
         </div>
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
@@ -167,6 +201,84 @@ export default function AddCourseForm() {
               {...register("organization")}
             />
           </div>
+        </div>
+        <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
+          <h3 className="text-white text-xl font-semibold p-4">Study plan</h3>
+        </div>
+        <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
+          {studyPlan.map((plan, planIndex) => (
+            <div key={planIndex} className="mb-4">
+              <input
+                type="text"
+                placeholder="Week Title"
+                className={`${styles.tealBg} input w-full mb-2 text-white`}
+                value={plan.title}
+                onChange={(e) =>
+                  handleStudyPlanChange(planIndex, "title", e.target.value)
+                }
+              />
+              {plan.modules.map((module, moduleIndex) => (
+                <div key={moduleIndex} className="grid md:grid-cols-3 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Module Title"
+                    className={`${styles.tealBg} input w-full mb-2 text-white`}
+                    value={module.title}
+                    onChange={(e) =>
+                      handleModuleChange(
+                        planIndex,
+                        moduleIndex,
+                        "title",
+                        e.target.value
+                      )
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Module Type"
+                    className={`${styles.tealBg} input w-full mb-2 text-white`}
+                    value={module.type}
+                    onChange={(e) =>
+                      handleModuleChange(
+                        planIndex,
+                        moduleIndex,
+                        "type",
+                        e.target.value
+                      )
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Module Source"
+                    className={`${styles.tealBg} input w-full mb-2 text-white`}
+                    value={module.src}
+                    onChange={(e) =>
+                      handleModuleChange(
+                        planIndex,
+                        moduleIndex,
+                        "src",
+                        e.target.value
+                      )
+                    }
+                  />
+                </div>
+              ))}
+              <button
+                className={`${styles.tealBg} p-2 rounded-md mb-2 text-white`}
+                type="button"
+                onClick={() => handleAddModule(planIndex)}
+              >
+                Add Module
+              </button>
+            </div>
+          ))}
+          <button
+            className={`${styles.tealBg} p-3 rounded-md text-white`}
+            type="button"
+            onClick={handleAddStudyPlan}
+          >
+            Add Study Plan
+          </button>
         </div>
       </form>
     </div>
