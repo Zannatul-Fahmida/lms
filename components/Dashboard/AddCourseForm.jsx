@@ -7,6 +7,33 @@ export default function AddCourseForm() {
   const [requirements, setRequirements] = useState([]);
   const [benefits, setBenefits] = useState([]);
   const [studyPlan, setStudyPlan] = useState([]);
+  const [instructors, setInstructors] = useState([
+    {
+      name: "",
+      photo: "",
+      designation: "",
+      organization: "",
+    },
+  ]);
+
+  const handleInstructorChange = (index, field, value) => {
+    const updatedInstructors = [...instructors];
+    updatedInstructors[index][field] = value;
+    setInstructors(updatedInstructors);
+  };
+
+  const handleAddInstructor = () => {
+    setInstructors([
+      ...instructors,
+      {
+        name: "",
+        photo: "",
+        designation: "",
+        organization: "",
+        _id: "",
+      },
+    ]);
+  };
 
   const handleAddRequirement = () => {
     setRequirements([...requirements, ""]);
@@ -174,7 +201,7 @@ export default function AddCourseForm() {
             Instructor Details
           </h3>
         </div>
-        <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
+        {/*<div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
           <input
             type="text"
             placeholder="Instructor photo"
@@ -185,22 +212,85 @@ export default function AddCourseForm() {
             <input
               type="text"
               placeholder="Name"
-              className={`${styles.tealBg} input w-full`}
+              className={`${styles.tealBg} input w-full text-white`}
               {...register("name")}
             />
             <input
               type="text"
               placeholder="Designation"
-              className={`${styles.tealBg} input w-full`}
+              className={`${styles.tealBg} input w-full text-white`}
               {...register("designation")}
             />
             <input
               type="text"
               placeholder="Organization"
-              className={`${styles.tealBg} input w-full`}
+              className={`${styles.tealBg} input w-full text-white`}
               {...register("organization")}
             />
           </div>
+              </div>*/}
+        <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
+          {instructors.map((instructor, index) => (
+            <div key={index}>
+              <input
+                type="text"
+                placeholder="Instructor photo"
+                className={`${styles.tealBg} input w-full mb-4 text-white`}
+                {...register(`instructors[${index}].photo`, {
+                  value: instructor.photo,
+                })}
+                onChange={(e) =>
+                  handleInstructorChange(index, "photo", e.target.value)
+                }
+              />
+              <div className="grid md:grid-cols-3 gap-4">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className={`${styles.tealBg} input w-full text-white`}
+                  {...register(`instructors[${index}].name`, {
+                    value: instructor.name,
+                  })}
+                  onChange={(e) =>
+                    handleInstructorChange(index, "name", e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Designation"
+                  className={`${styles.tealBg} input w-full text-white`}
+                  {...register(`instructors[${index}].designation`, {
+                    value: instructor.designation,
+                  })}
+                  onChange={(e) =>
+                    handleInstructorChange(index, "designation", e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="Organization"
+                  className={`${styles.tealBg} input w-full text-white`}
+                  {...register(`instructors[${index}].organization`, {
+                    value: instructor.organization,
+                  })}
+                  onChange={(e) =>
+                    handleInstructorChange(
+                      index,
+                      "organization",
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            className={`${styles.tealBg} p-3 rounded-md text-white mt-4`}
+            type="button"
+            onClick={handleAddInstructor}
+          >
+            Add Instructor
+          </button>
         </div>
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
           <h3 className="text-white text-xl font-semibold p-4">Study plan</h3>
@@ -279,6 +369,13 @@ export default function AddCourseForm() {
           >
             Add Study Plan
           </button>
+        </div>
+        <div className="flex items-center justify-center">
+          <input
+            type="submit"
+            value="Add this course"
+            className={`bg-teal-700 btn text-white border-0 hover:bg-teal-600 w-80 mx-auto mt-8 mb-4`}
+          />
         </div>
       </form>
     </div>
