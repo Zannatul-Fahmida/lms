@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import styles from "../../styles/Dashboard.module.css";
 import { useState } from "react";
+import { MdClose } from "react-icons/md";
+import apiFunctions from "../../pages/api/createCourse";
 
 export default function AddCourseForm() {
   const { register, handleSubmit } = useForm();
@@ -15,6 +17,7 @@ export default function AddCourseForm() {
       organization: "",
     },
   ]);
+  const [tags, setTags] = useState([]);
 
   const handleInstructorChange = (index, field, value) => {
     const updatedInstructors = [...instructors];
@@ -79,33 +82,67 @@ export default function AddCourseForm() {
     updatedStudyPlan[planIndex].modules[moduleIndex][field] = value;
     setStudyPlan(updatedStudyPlan);
   };
+  const handleTagChange = (index, value) => {
+    const updatedTags = [...tags];
+    updatedTags[index] = { name: value };
+    setTags(updatedTags);
+  };
 
-  const onSubmit = () => {};
+  const handleAddTag = () => {
+    setTags([...tags, { name: "" }]);
+  };
+
+  const handleRemoveTag = (index) => {
+    const updatedTags = [...tags];
+    updatedTags.splice(index, 1);
+    setTags(updatedTags);
+  };
+
+  const onSubmit = async (data) => {
+    const formData = {
+      title: data.title,
+      price: data.price,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      description: data.description,
+      sits: data.sits,
+      promo: data.promo,
+      tags: tags.map((tag) => tag.name),
+      requirements: requirements,
+      benefits: benefits,
+      instructors: data.instructors.map((instructor) => ({
+        name: instructor.name,
+        photo: instructor.photo,
+        designation: instructor.designation,
+        organization: instructor.organization,
+      })),
+      studyPlan: studyPlan.map((plan) => ({
+        title: plan.title,
+        modules: plan.modules.map((module) => ({
+          title: module.title,
+          type: module.type,
+          src: module.src,
+        })),
+      })),
+    };
+
+  };
+
   return (
     <div>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
-          {/*<label className="w-full">
-            <div className="label">
-              <span className="label-text text-white">Course thumbnail</span>
-            </div>
-            <input
-              type="file"
-              className={`${styles.tealBg} file-input w-full mb-4 text-white`}
-              {...register("thumbnail")}
-            />
-          </label>*/}
           <div className="grid md:grid-cols-2 gap-4">
             <input
               type="text"
               placeholder="Course title"
-              className={`${styles.tealBg} input w-full`}
+              className={`${styles.tealBg} input w-full text-white`}
               {...register("title")}
             />
             <input
               type="number"
               placeholder="Price"
-              className={`${styles.tealBg} input w-full`}
+              className={`${styles.tealBg} input w-full text-white`}
               {...register("price")}
             />
             <label className="w-full">
@@ -134,20 +171,20 @@ export default function AddCourseForm() {
           <textarea
             type="text"
             placeholder="Course Description"
-            className={`${styles.tealBg} textarea w-full mb-4`}
+            className={`${styles.tealBg} textarea w-full mb-4 text-white`}
             {...register("description")}
           />
           <div className="grid md:grid-cols-2 gap-4">
             <input
-              type="text"
+              type="number"
               placeholder="Seats"
-              className={`${styles.tealBg} input w-full mb-4`}
+              className={`${styles.tealBg} input w-full mb-4 text-white`}
               {...register("sits")}
             />
             <input
               type="text"
               placeholder="Promo"
-              className={`${styles.tealBg} input w-full mb-4`}
+              className={`${styles.tealBg} input w-full mb-4 text-white`}
               {...register("promo")}
             />
           </div>
@@ -158,7 +195,7 @@ export default function AddCourseForm() {
                   <input
                     type="text"
                     placeholder="Requirement"
-                    className={`${styles.tealBg} input w-full text-slate-400`}
+                    className={`${styles.tealBg} input w-full  text-white`}
                     value={requirement}
                     onChange={(e) =>
                       handleRequirementChange(index, e.target.value)
@@ -180,7 +217,7 @@ export default function AddCourseForm() {
                   <input
                     type="text"
                     placeholder="Benefit"
-                    className={`${styles.tealBg} input w-full text-slate-400`}
+                    className={`${styles.tealBg} input w-full  text-white`}
                     value={benefit}
                     onChange={(e) => handleBenefitChange(index, e.target.value)}
                   />
@@ -195,43 +232,42 @@ export default function AddCourseForm() {
               </button>
             </div>
           </div>
+          <div className={`my-4 rounded-lg text-white`}>
+            {tags.map((tag, index) => (
+              <div key={index} className="flex gap-4 mb-4">
+                <input
+                  type="text"
+                  placeholder="Tag"
+                  className={`${styles.tealBg} input w-full text-white`}
+                  value={tag.name}
+                  onChange={(e) => handleTagChange(index, e.target.value)}
+                />
+                <button
+                  className={`${styles.tealBg} p-4 rounded-full text-white`}
+                  type="button"
+                  onClick={() => handleRemoveTag(index)}
+                >
+                  <MdClose />
+                </button>
+              </div>
+            ))}
+            <button
+              className={`${styles.tealBg} p-3 rounded-md`}
+              type="button"
+              onClick={handleAddTag}
+            >
+              Add Tag
+            </button>
+          </div>
         </div>
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
           <h3 className="text-white text-xl font-semibold p-4">
             Instructor Details
           </h3>
         </div>
-        {/*<div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
-          <input
-            type="text"
-            placeholder="Instructor photo"
-            className={`${styles.tealBg} input w-full mb-4 text-white`}
-            {...register("photo")}
-          />
-          <div className="grid md:grid-cols-3 gap-4">
-            <input
-              type="text"
-              placeholder="Name"
-              className={`${styles.tealBg} input w-full text-white`}
-              {...register("name")}
-            />
-            <input
-              type="text"
-              placeholder="Designation"
-              className={`${styles.tealBg} input w-full text-white`}
-              {...register("designation")}
-            />
-            <input
-              type="text"
-              placeholder="Organization"
-              className={`${styles.tealBg} input w-full text-white`}
-              {...register("organization")}
-            />
-          </div>
-              </div>*/}
-        <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
+        <div className={`${styles.skyBlueBg} my-4 rounded-lg px-4`}>
           {instructors.map((instructor, index) => (
-            <div key={index}>
+            <div key={index} className="py-4">
               <input
                 type="text"
                 placeholder="Instructor photo"
@@ -285,7 +321,7 @@ export default function AddCourseForm() {
             </div>
           ))}
           <button
-            className={`${styles.tealBg} p-3 rounded-md text-white mt-4`}
+            className={`${styles.tealBg} p-3 rounded-md text-white my-4`}
             type="button"
             onClick={handleAddInstructor}
           >
