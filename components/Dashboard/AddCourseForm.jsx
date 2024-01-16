@@ -2,7 +2,8 @@ import { useForm } from "react-hook-form";
 import styles from "../../styles/Dashboard.module.css";
 import { useState } from "react";
 import { MdClose } from "react-icons/md";
-import apiFunctions from "../../pages/api/createCourse";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 export default function AddCourseForm() {
   const { register, handleSubmit } = useForm();
@@ -18,6 +19,7 @@ export default function AddCourseForm() {
     },
   ]);
   const [tags, setTags] = useState([]);
+  const {token} = useSelector(state => state.auth.token)
 
   const handleInstructorChange = (index, field, value) => {
     const updatedInstructors = [...instructors];
@@ -125,6 +127,21 @@ export default function AddCourseForm() {
         })),
       })),
     };
+
+    try {
+      const response = await axios.post('https://online-learning-platform-backend.vercel.app/api/courses', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': ` ${token}`
+        },
+      });
+
+      console.log('Response:', response.data);
+  
+    } catch (error) {
+      console.error('Error:', error);
+
+    }
 
   };
 
