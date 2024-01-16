@@ -1,23 +1,46 @@
 import { useForm } from "react-hook-form";
 import styles from "../../styles/Dashboard.module.css";
+import { useState } from "react";
 
 export default function AddCourseForm() {
   const { register, handleSubmit } = useForm();
+  const [requirements, setRequirements] = useState([]);
+  const [benefits, setBenefits] = useState([]);
+
+  const handleAddRequirement = () => {
+    setRequirements([...requirements, ""]);
+  };
+
+  const handleRequirementChange = (index, value) => {
+    const updatedRequirements = [...requirements];
+    updatedRequirements[index] = value;
+    setRequirements(updatedRequirements);
+  };
+
+  const handleAddBenefit = () => {
+    setBenefits([...benefits, ""]);
+  };
+
+  const handleBenefitChange = (index, value) => {
+    const updatedBenefits = [...benefits];
+    updatedBenefits[index] = value;
+    setBenefits(updatedBenefits);
+  };
 
   const onSubmit = () => {};
   return (
     <div>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
-        <label className="w-full">
-          <div className="label">
-            <span className="label-text text-white">Course thumbnail</span>
-          </div>
-          <input
-            type="file"
-            className={`${styles.tealBg} file-input w-full mb-4 text-white`}
-            {...register("thumbnail")}
-          />
+          <label className="w-full">
+            <div className="label">
+              <span className="label-text text-white">Course thumbnail</span>
+            </div>
+            <input
+              type="file"
+              className={`${styles.tealBg} file-input w-full mb-4 text-white`}
+              {...register("thumbnail")}
+            />
           </label>
           <div className="grid md:grid-cols-2 gap-4">
             <input
@@ -74,6 +97,42 @@ export default function AddCourseForm() {
               className={`${styles.tealBg} input w-full mb-4`}
               {...register("promo")}
             />
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+          <div className={`my-4 rounded-lg text-white`}>
+            {requirements.map((requirement, index) => (
+              <div key={index} className="mb-4">
+                <input
+                  type="text"
+                  placeholder="Requirement"
+                  className={`${styles.tealBg} input w-full text-slate-400`}
+                  value={requirement}
+                  onChange={(e) =>
+                    handleRequirementChange(index, e.target.value)
+                  }
+                />
+              </div>
+            ))}
+            <button className={`${styles.tealBg} p-3 rounded-md`} type="button" onClick={handleAddRequirement}>
+              Add Requirement
+            </button>
+          </div>
+          <div className={`my-4 rounded-lg text-white`}>
+            {benefits.map((benefit, index) => (
+              <div key={index} className="mb-4">
+                <input
+                  type="text"
+                  placeholder="Benefit"
+                  className={`${styles.tealBg} input w-full text-slate-400`}
+                  value={benefit}
+                  onChange={(e) => handleBenefitChange(index, e.target.value)}
+                />
+              </div>
+            ))}
+            <button className={`${styles.tealBg} p-3 rounded-md`} type="button" onClick={handleAddBenefit}>
+              Add Benefit
+            </button>
+          </div>
           </div>
         </div>
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
