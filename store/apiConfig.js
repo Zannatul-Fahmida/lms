@@ -4,7 +4,7 @@ export const BASE_URL = "https://online-learning-platform-backend.vercel.app/api
 export const AUTH = {
   REGISTER_API: `${BASE_URL}/auth/register`,
   LOGIN_API: `${BASE_URL}/auth/login`,
-  // GET_USER_API: `${BASE_URL}/auth/profile`,
+  GET_USER_API: `${BASE_URL}/auth/profile`,
   LOGOUT_API: `${BASE_URL}/auth/logout`,
 };
 

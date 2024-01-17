@@ -25,22 +25,22 @@ const getCurrentUser = () => {
   });
 };
 
-// export const fetchUserDetails = async (token) => {
-//   const response = await axios.get(AUTH.GET_USER_API, {
-//     headers: {
-//       Authorization: `${token}`,
-//       Accept: "application/json",
-//     },
-//   });
-//   return response.data;
-// };
+export const fetchUserDetails = async (token) => {
+  const response = await axios.get(AUTH.GET_USER_API, {
+    headers: {
+      Authorization: `${token}`,
+      Accept: "application/json",
+    },
+  });
+  return response.data;
+};
 
 const AuthService = {
   register,
   login,
   logout,
   getCurrentUser,
-  // fetchUserDetails,
+  fetchUserDetails,
 };
 
 export default AuthService;

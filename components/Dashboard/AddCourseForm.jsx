@@ -1,15 +1,28 @@
 import { useForm } from "react-hook-form";
 import styles from "../../styles/Dashboard.module.css";
 import { useState } from "react";
-import { MdClose } from "react-icons/md";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import CourseDetails from "./CourseDetails";
+import InstructorDetails from "./InstructorDetails";
+import StudyPlan from "./StudyPlan";
 
 export default function AddCourseForm() {
   const { register, handleSubmit } = useForm();
-  const [requirements, setRequirements] = useState([]);
-  const [benefits, setBenefits] = useState([]);
-  const [studyPlan, setStudyPlan] = useState([]);
+  const [requirements, setRequirements] = useState(['']);
+  const [benefits, setBenefits] = useState(['']);
+  const [studyPlan, setStudyPlan] = useState([
+    {
+      title: '',
+      modules: [
+        {
+          title: '',
+          type: '',
+          src: ''
+        }
+      ]
+    }
+  ]);
   const [instructors, setInstructors] = useState([
     {
       name: "",
@@ -18,8 +31,8 @@ export default function AddCourseForm() {
       organization: "",
     },
   ]);
-  const [tags, setTags] = useState([]);
-  const {token} = useSelector(state => state.auth.token)
+  const [tags, setTags] = useState(['']);
+  const { token } = useSelector((state) => state.auth.token);
 
   const handleInstructorChange = (index, field, value) => {
     const updatedInstructors = [...instructors];
@@ -40,8 +53,20 @@ export default function AddCourseForm() {
     ]);
   };
 
+  const handleRemoveInstructor = (index) => {
+    const updatedInstructors = [...instructors];
+    updatedInstructors.splice(index, 1);
+    setInstructors(updatedInstructors);
+  };
+
   const handleAddRequirement = () => {
     setRequirements([...requirements, ""]);
+  };
+
+  const handleRemoveRequirement = (index) => {
+    const updatedRequirements = [...requirements];
+    updatedRequirements.splice(index, 1);
+    setRequirements(updatedRequirements);
   };
 
   const handleRequirementChange = (index, value) => {
@@ -52,6 +77,12 @@ export default function AddCourseForm() {
 
   const handleAddBenefit = () => {
     setBenefits([...benefits, ""]);
+  };
+
+  const handleRemoveBenefit = (index) => {
+    const updatedBenefits = [...benefits];
+    updatedBenefits.splice(index, 1);
+    setBenefits(updatedBenefits);
   };
 
   const handleBenefitChange = (index, value) => {
@@ -67,6 +98,12 @@ export default function AddCourseForm() {
     ]);
   };
 
+  const handleRemoveStudyPlan = (index) => {
+    const updatedStudyPlan = [...studyPlan];
+    updatedStudyPlan.splice(index, 1);
+    setStudyPlan(updatedStudyPlan);
+  };
+
   const handleStudyPlanChange = (planIndex, field, value) => {
     const updatedStudyPlan = [...studyPlan];
     updatedStudyPlan[planIndex][field] = value;
@@ -76,6 +113,12 @@ export default function AddCourseForm() {
   const handleAddModule = (planIndex) => {
     const updatedStudyPlan = [...studyPlan];
     updatedStudyPlan[planIndex].modules.push({ title: "", type: "", src: "" });
+    setStudyPlan(updatedStudyPlan);
+  };
+
+  const handleRemoveModule = (planIndex, moduleIndex) => {
+    const updatedStudyPlan = [...studyPlan];
+    updatedStudyPlan[planIndex].modules.splice(moduleIndex, 1);
     setStudyPlan(updatedStudyPlan);
   };
 
@@ -127,302 +170,68 @@ export default function AddCourseForm() {
         })),
       })),
     };
+    console.log(formData);
 
     try {
-      const response = await axios.post('https://online-learning-platform-backend.vercel.app/api/courses', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': ` ${token}`
-        },
-      });
+      const response = await axios.post(
+        "https://online-learning-platform-backend.vercel.app/api/courses",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: ` ${token}`,
+          },
+        }
+      );
 
-      console.log('Response:', response.data);
-  
+      console.log("Response:", response.data);
     } catch (error) {
-      console.error('Error:', error);
-
+      console.error("Error:", error);
     }
-
   };
 
   return (
     <div>
       <form action="" onSubmit={handleSubmit(onSubmit)}>
-        <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
-          <div className="grid md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Course title"
-              className={`${styles.tealBg} input w-full text-white`}
-              {...register("title")}
-            />
-            <input
-              type="number"
-              placeholder="Price"
-              className={`${styles.tealBg} input w-full text-white`}
-              {...register("price")}
-            />
-            <label className="w-full">
-              <div className="label">
-                <span className="label-text text-white">Start date</span>
-              </div>
-              <input
-                type="date"
-                placeholder="Start date"
-                className={`${styles.tealBg} input text-white w-full`}
-                {...register("startDate")}
-              />
-            </label>
-            <label className="w-full">
-              <div className="label">
-                <span className="label-text text-white">End date</span>
-              </div>
-              <input
-                type="date"
-                placeholder="End date"
-                className={`${styles.tealBg} input w-full mb-4 text-white`}
-                {...register("endDate")}
-              />
-            </label>
-          </div>
-          <textarea
-            type="text"
-            placeholder="Course Description"
-            className={`${styles.tealBg} textarea w-full mb-4 text-white`}
-            {...register("description")}
-          />
-          <div className="grid md:grid-cols-2 gap-4">
-            <input
-              type="number"
-              placeholder="Seats"
-              className={`${styles.tealBg} input w-full mb-4 text-white`}
-              {...register("sits")}
-            />
-            <input
-              type="text"
-              placeholder="Promo"
-              className={`${styles.tealBg} input w-full mb-4 text-white`}
-              {...register("promo")}
-            />
-          </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className={`my-4 rounded-lg text-white`}>
-              {requirements.map((requirement, index) => (
-                <div key={index} className="mb-4">
-                  <input
-                    type="text"
-                    placeholder="Requirement"
-                    className={`${styles.tealBg} input w-full  text-white`}
-                    value={requirement}
-                    onChange={(e) =>
-                      handleRequirementChange(index, e.target.value)
-                    }
-                  />
-                </div>
-              ))}
-              <button
-                className={`${styles.tealBg} p-3 rounded-md`}
-                type="button"
-                onClick={handleAddRequirement}
-              >
-                Add Requirement
-              </button>
-            </div>
-            <div className={`my-4 rounded-lg text-white`}>
-              {benefits.map((benefit, index) => (
-                <div key={index} className="mb-4">
-                  <input
-                    type="text"
-                    placeholder="Benefit"
-                    className={`${styles.tealBg} input w-full  text-white`}
-                    value={benefit}
-                    onChange={(e) => handleBenefitChange(index, e.target.value)}
-                  />
-                </div>
-              ))}
-              <button
-                className={`${styles.tealBg} p-3 rounded-md`}
-                type="button"
-                onClick={handleAddBenefit}
-              >
-                Add Benefit
-              </button>
-            </div>
-          </div>
-          <div className={`my-4 rounded-lg text-white`}>
-            {tags.map((tag, index) => (
-              <div key={index} className="flex gap-4 mb-4">
-                <input
-                  type="text"
-                  placeholder="Tag"
-                  className={`${styles.tealBg} input w-full text-white`}
-                  value={tag.name}
-                  onChange={(e) => handleTagChange(index, e.target.value)}
-                />
-                <button
-                  className={`${styles.tealBg} p-4 rounded-full text-white`}
-                  type="button"
-                  onClick={() => handleRemoveTag(index)}
-                >
-                  <MdClose />
-                </button>
-              </div>
-            ))}
-            <button
-              className={`${styles.tealBg} p-3 rounded-md`}
-              type="button"
-              onClick={handleAddTag}
-            >
-              Add Tag
-            </button>
-          </div>
-        </div>
+        <CourseDetails
+          register={register}
+          handleRequirementChange={handleRequirementChange}
+          requirements={requirements}
+          handleRemoveRequirement={handleRemoveRequirement}
+          handleAddRequirement={handleAddRequirement}
+          benefits={benefits}
+          handleBenefitChange={handleBenefitChange}
+          handleRemoveBenefit={handleRemoveBenefit}
+          handleAddBenefit={handleAddBenefit}
+          tags={tags}
+          handleTagChange={handleTagChange}
+          handleRemoveTag={handleRemoveTag}
+          handleAddTag={handleAddTag}
+        />
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
           <h3 className="text-white text-xl font-semibold p-4">
             Instructor Details
           </h3>
         </div>
-        <div className={`${styles.skyBlueBg} my-4 rounded-lg px-4`}>
-          {instructors.map((instructor, index) => (
-            <div key={index} className="py-4">
-              <input
-                type="text"
-                placeholder="Instructor photo"
-                className={`${styles.tealBg} input w-full mb-4 text-white`}
-                {...register(`instructors[${index}].photo`, {
-                  value: instructor.photo,
-                })}
-                onChange={(e) =>
-                  handleInstructorChange(index, "photo", e.target.value)
-                }
-              />
-              <div className="grid md:grid-cols-3 gap-4">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  className={`${styles.tealBg} input w-full text-white`}
-                  {...register(`instructors[${index}].name`, {
-                    value: instructor.name,
-                  })}
-                  onChange={(e) =>
-                    handleInstructorChange(index, "name", e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Designation"
-                  className={`${styles.tealBg} input w-full text-white`}
-                  {...register(`instructors[${index}].designation`, {
-                    value: instructor.designation,
-                  })}
-                  onChange={(e) =>
-                    handleInstructorChange(index, "designation", e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  placeholder="Organization"
-                  className={`${styles.tealBg} input w-full text-white`}
-                  {...register(`instructors[${index}].organization`, {
-                    value: instructor.organization,
-                  })}
-                  onChange={(e) =>
-                    handleInstructorChange(
-                      index,
-                      "organization",
-                      e.target.value
-                    )
-                  }
-                />
-              </div>
-            </div>
-          ))}
-          <button
-            className={`${styles.tealBg} p-3 rounded-md text-white my-4`}
-            type="button"
-            onClick={handleAddInstructor}
-          >
-            Add Instructor
-          </button>
-        </div>
+        <InstructorDetails
+          register={register}
+          instructors={instructors}
+          handleInstructorChange={handleInstructorChange}
+          handleRemoveInstructor={handleRemoveInstructor}
+          handleAddInstructor={handleAddInstructor}
+        />
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
           <h3 className="text-white text-xl font-semibold p-4">Study plan</h3>
         </div>
-        <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
-          {studyPlan.map((plan, planIndex) => (
-            <div key={planIndex} className="mb-4">
-              <input
-                type="text"
-                placeholder="Week Title"
-                className={`${styles.tealBg} input w-full mb-2 text-white`}
-                value={plan.title}
-                onChange={(e) =>
-                  handleStudyPlanChange(planIndex, "title", e.target.value)
-                }
-              />
-              {plan.modules.map((module, moduleIndex) => (
-                <div key={moduleIndex} className="grid md:grid-cols-3 gap-4">
-                  <input
-                    type="text"
-                    placeholder="Module Title"
-                    className={`${styles.tealBg} input w-full mb-2 text-white`}
-                    value={module.title}
-                    onChange={(e) =>
-                      handleModuleChange(
-                        planIndex,
-                        moduleIndex,
-                        "title",
-                        e.target.value
-                      )
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="Module Type"
-                    className={`${styles.tealBg} input w-full mb-2 text-white`}
-                    value={module.type}
-                    onChange={(e) =>
-                      handleModuleChange(
-                        planIndex,
-                        moduleIndex,
-                        "type",
-                        e.target.value
-                      )
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="Module Source"
-                    className={`${styles.tealBg} input w-full mb-2 text-white`}
-                    value={module.src}
-                    onChange={(e) =>
-                      handleModuleChange(
-                        planIndex,
-                        moduleIndex,
-                        "src",
-                        e.target.value
-                      )
-                    }
-                  />
-                </div>
-              ))}
-              <button
-                className={`${styles.tealBg} p-2 rounded-md mb-2 text-white`}
-                type="button"
-                onClick={() => handleAddModule(planIndex)}
-              >
-                Add Module
-              </button>
-            </div>
-          ))}
-          <button
-            className={`${styles.tealBg} p-3 rounded-md text-white`}
-            type="button"
-            onClick={handleAddStudyPlan}
-          >
-            Add Study Plan
-          </button>
-        </div>
+        <StudyPlan
+          studyPlan={studyPlan}
+          handleStudyPlanChange={handleStudyPlanChange}
+          handleModuleChange={handleModuleChange}
+          handleRemoveModule={handleRemoveModule}
+          handleAddModule={handleAddModule}
+          handleRemoveStudyPlan={handleRemoveStudyPlan}
+          handleAddStudyPlan={handleAddStudyPlan}
+        />
         <div className="flex items-center justify-center">
           <input
             type="submit"
