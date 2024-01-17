@@ -153,25 +153,32 @@ export default function AddCourseForm() {
       sits: data.sits,
       promo: data.promo,
       tags: tags.map((tag) => tag.name),
-      requirements: requirements,
-      benefits: benefits,
-      instructors: data.instructors.map((instructor) => ({
-        name: instructor.name,
-        photo: instructor.photo,
-        designation: instructor.designation,
-        organization: instructor.organization,
-      })),
-      studyPlan: studyPlan.map((plan) => ({
-        title: plan.title,
-        modules: plan.modules.map((module) => ({
-          title: module.title,
-          type: module.type,
-          src: module.src,
+      requirements: requirements.filter((req) => req.trim() !== ""), 
+      benefits: benefits.filter((benefit) => benefit.trim() !== ""), 
+      instructors: data.instructors
+        .filter((instructor) => instructor.name.trim() !== "") 
+        .map((instructor) => ({
+          name: instructor.name,
+          photo: instructor.photo,
+          designation: instructor.designation,
+          organization: instructor.organization,
         })),
-      })),
+      studyPlan: studyPlan
+        .filter((plan) => plan.title.trim() !== "") 
+        .map((plan) => ({
+          title: plan.title,
+          modules: plan.modules
+            .filter((module) => module.title.trim() !== "") 
+            .map((module) => ({
+              title: module.title,
+              type: module.type,
+              src: module.src,
+            })),
+        })),
     };
+  
     console.log(formData);
-
+  
     try {
       const response = await axios.post(
         "https://online-learning-platform-backend.vercel.app/api/courses",
@@ -183,12 +190,12 @@ export default function AddCourseForm() {
           },
         }
       );
-
+  
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
     }
-  };
+  };  
 
   return (
     <div>
