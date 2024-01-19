@@ -9,6 +9,7 @@ export default function StudyPlan({
   handleAddModule,
   handleRemoveStudyPlan,
   handleAddStudyPlan,
+  handleModuleTypeChange,
 }) {
   return (
     <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
@@ -40,20 +41,25 @@ export default function StudyPlan({
                     )
                   }
                 />
-                <input
-                  type="text"
-                  placeholder="Module Type"
-                  className={`${styles.tealBg} input w-full mb-2 text-white`}
+                <select
                   value={module.type}
                   onChange={(e) =>
-                    handleModuleChange(
+                    handleModuleTypeChange(
                       planIndex,
                       moduleIndex,
-                      "type",
                       e.target.value
                     )
                   }
-                />
+                  className={`${styles.tealBg} select w-full max-w-xs text-white`}
+                >
+                  <option disabled value="">
+                    Pick module type
+                  </option>
+                  <option value="Live Class">Live Class</option>
+                  <option value="Assignment">Assignment</option>
+                  <option value="Test">Test</option>
+                  <option value="Support Class">Support Class</option>
+                </select>
                 <input
                   type="text"
                   placeholder="Module Source"

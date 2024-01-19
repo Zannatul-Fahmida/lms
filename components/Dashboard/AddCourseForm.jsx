@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import styles from "../../styles/Dashboard.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import CourseDetails from "./CourseDetails";
@@ -9,19 +9,19 @@ import StudyPlan from "./StudyPlan";
 
 export default function AddCourseForm() {
   const { register, handleSubmit } = useForm();
-  const [requirements, setRequirements] = useState(['']);
-  const [benefits, setBenefits] = useState(['']);
+  const [requirements, setRequirements] = useState([""]);
+  const [benefits, setBenefits] = useState([""]);
   const [studyPlan, setStudyPlan] = useState([
     {
-      title: '',
+      title: "",
       modules: [
         {
-          title: '',
-          type: '',
-          src: ''
-        }
-      ]
-    }
+          title: "",
+          type: "",
+          src: "",
+        },
+      ],
+    },
   ]);
   const [instructors, setInstructors] = useState([
     {
@@ -31,8 +31,24 @@ export default function AddCourseForm() {
       organization: "",
     },
   ]);
-  const [tags, setTags] = useState(['']);
-  const { token } = useSelector((state) => state.auth.token);
+  const [tags, setTags] = useState([{ name: "" }]);
+  const { user, token } = useSelector((state) => state.auth);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "https://online-learning-platform-backend.vercel.app/api/categories"
+        );
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleInstructorChange = (index, field, value) => {
     const updatedInstructors = [...instructors];
@@ -91,6 +107,12 @@ export default function AddCourseForm() {
     setBenefits(updatedBenefits);
   };
 
+  const handleModuleTypeChange = (planIndex, moduleIndex, value) => {
+    const updatedStudyPlan = [...studyPlan];
+    updatedStudyPlan[planIndex].modules[moduleIndex].type = value;
+    setStudyPlan(updatedStudyPlan);
+  };
+
   const handleAddStudyPlan = () => {
     setStudyPlan([
       ...studyPlan,
@@ -146,17 +168,21 @@ export default function AddCourseForm() {
   const onSubmit = async (data) => {
     const formData = {
       title: data.title,
-      price: data.price,
+      price: parseFloat(data.price),
       startDate: data.startDate,
       endDate: data.endDate,
-      description: data.description,
-      sits: data.sits,
+      thumbnail: data.thumbnail,
+      details: {
+        level: data.level,
+        description: data.description,
+      },
+      sits: parseInt(data.sits),
       promo: data.promo,
-      tags: tags.map((tag) => tag.name),
-      requirements: requirements.filter((req) => req.trim() !== ""), 
-      benefits: benefits.filter((benefit) => benefit.trim() !== ""), 
-      instructors: data.instructors
-        .filter((instructor) => instructor.name.trim() !== "") 
+      tags: tags.map((tag) => ({name: tag.name})),
+      requirements: requirements.filter((req) => req.trim() !== ""),
+      benifits: benefits.filter((benefit) => benefit.trim() !== ""),
+      instructor: data.instructors
+        .filter((instructor) => instructor.name.trim() !== "")
         .map((instructor) => ({
           name: instructor.name,
           photo: instructor.photo,
@@ -164,21 +190,21 @@ export default function AddCourseForm() {
           organization: instructor.organization,
         })),
       studyPlan: studyPlan
-        .filter((plan) => plan.title.trim() !== "") 
+        .filter((plan) => plan.title.trim() !== "")
         .map((plan) => ({
           title: plan.title,
           modules: plan.modules
-            .filter((module) => module.title.trim() !== "") 
+            .filter((module) => module.title.trim() !== "")
             .map((module) => ({
               title: module.title,
               type: module.type,
               src: module.src,
             })),
         })),
+      createdBy: user._id,
+      categoryId: data.categoryId,
     };
-  
-    console.log(formData);
-  
+
     try {
       const response = await axios.post(
         "https://online-learning-platform-backend.vercel.app/api/courses",
@@ -186,16 +212,16 @@ export default function AddCourseForm() {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: ` ${token}`,
+            Authorization: `${token}`,
           },
         }
       );
-  
+
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
     }
-  };  
+  };
 
   return (
     <div>
@@ -214,6 +240,7 @@ export default function AddCourseForm() {
           handleTagChange={handleTagChange}
           handleRemoveTag={handleRemoveTag}
           handleAddTag={handleAddTag}
+          categories={categories}
         />
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
           <h3 className="text-white text-xl font-semibold p-4">
@@ -238,6 +265,7 @@ export default function AddCourseForm() {
           handleAddModule={handleAddModule}
           handleRemoveStudyPlan={handleRemoveStudyPlan}
           handleAddStudyPlan={handleAddStudyPlan}
+          handleModuleTypeChange={handleModuleTypeChange}
         />
         <div className="flex items-center justify-center">
           <input

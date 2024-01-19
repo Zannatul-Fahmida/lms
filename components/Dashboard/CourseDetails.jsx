@@ -15,9 +15,16 @@ export default function CourseDetails({
   handleRemoveRequirement,
   handleRequirementChange,
   handleBenefitChange,
+  categories,
 }) {
   return (
     <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
+      <input
+        type="text"
+        placeholder="Course Thumbnail"
+        className={`${styles.tealBg} input w-full text-white mb-4`}
+        {...register("thumbnail")}
+      />
       <div className="grid md:grid-cols-2 gap-4">
         <input
           type="text"
@@ -31,6 +38,8 @@ export default function CourseDetails({
           className={`${styles.tealBg} input w-full text-white`}
           {...register("price")}
         />
+      </div>
+      <div className="grid md:grid-cols-3 gap-4">
         <label className="w-full">
           <div className="label">
             <span className="label-text text-white">Start date</span>
@@ -53,7 +62,42 @@ export default function CourseDetails({
             {...register("endDate")}
           />
         </label>
+        <label className="w-full">
+          <div className="label">
+            <span className="label-text text-white">Category</span>
+          </div>
+          <select
+            className={`${styles.tealBg} select w-full text-white`}
+            {...register("categoryId")}
+          >
+            <option disabled selected>
+              Pick a category
+            </option>
+            {categories?.data?.map((category) => (
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
+      <select
+        className={`${styles.tealBg} select w-full text-white mb-4`}
+        {...register("level")}
+      >
+        <option disabled selected>
+          Pick course level
+        </option>
+          <option value='Beginner'>
+            Beginner
+          </option>
+          <option value='Intermediate'>
+            Intermediate
+          </option>
+          <option value='Expert'>
+            Expert
+          </option>
+      </select>
       <textarea
         type="text"
         placeholder="Course Description"
