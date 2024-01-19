@@ -8,7 +8,11 @@ import InstructorDetails from "./InstructorDetails";
 import StudyPlan from "./StudyPlan";
 
 export default function AddCourseForm() {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [requirements, setRequirements] = useState([""]);
   const [benefits, setBenefits] = useState([""]);
   const [studyPlan, setStudyPlan] = useState([
@@ -178,7 +182,7 @@ export default function AddCourseForm() {
       },
       sits: parseInt(data.sits),
       promo: data.promo,
-      tags: tags.map((tag) => ({name: tag.name})),
+      tags: tags.map((tag) => ({ name: tag.name })),
       requirements: requirements.filter((req) => req.trim() !== ""),
       benifits: benefits.filter((benefit) => benefit.trim() !== ""),
       instructor: data.instructors
@@ -241,6 +245,7 @@ export default function AddCourseForm() {
           handleRemoveTag={handleRemoveTag}
           handleAddTag={handleAddTag}
           categories={categories}
+          errors={errors}
         />
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
           <h3 className="text-white text-xl font-semibold p-4">

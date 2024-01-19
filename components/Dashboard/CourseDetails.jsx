@@ -16,6 +16,7 @@ export default function CourseDetails({
   handleRequirementChange,
   handleBenefitChange,
   categories,
+  errors,
 }) {
   return (
     <div className={`${styles.skyBlueBg} my-4 rounded-lg p-4`}>
@@ -23,20 +24,20 @@ export default function CourseDetails({
         type="text"
         placeholder="Course Thumbnail"
         className={`${styles.tealBg} input w-full text-white mb-4`}
-        {...register("thumbnail")}
+        {...register("thumbnail", { required: true })}
       />
       <div className="grid md:grid-cols-2 gap-4">
         <input
           type="text"
           placeholder="Course title"
           className={`${styles.tealBg} input w-full text-white`}
-          {...register("title")}
+          {...register("title", { required: true })}
         />
         <input
           type="number"
           placeholder="Price"
           className={`${styles.tealBg} input w-full text-white`}
-          {...register("price")}
+          {...register("price", { required: true })}
         />
       </div>
       <div className="grid md:grid-cols-3 gap-4">
@@ -48,7 +49,7 @@ export default function CourseDetails({
             type="date"
             placeholder="Start date"
             className={`${styles.tealBg} input text-white w-full`}
-            {...register("startDate")}
+            {...register("startDate", { required: true })}
           />
         </label>
         <label className="w-full">
@@ -59,7 +60,7 @@ export default function CourseDetails({
             type="date"
             placeholder="End date"
             className={`${styles.tealBg} input w-full mb-4 text-white`}
-            {...register("endDate")}
+            {...register("endDate", { required: true })}
           />
         </label>
         <label className="w-full">
@@ -68,7 +69,7 @@ export default function CourseDetails({
           </div>
           <select
             className={`${styles.tealBg} select w-full text-white`}
-            {...register("categoryId")}
+            {...register("categoryId", { required: true })}
           >
             <option disabled selected>
               Pick a category
@@ -83,33 +84,30 @@ export default function CourseDetails({
       </div>
       <select
         className={`${styles.tealBg} select w-full text-white mb-4`}
-        {...register("level")}
+        {...register("level", { required: true })}
       >
         <option disabled selected>
           Pick course level
         </option>
-          <option value='Beginner'>
-            Beginner
-          </option>
-          <option value='Intermediate'>
-            Intermediate
-          </option>
-          <option value='Expert'>
-            Expert
-          </option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Expert">Expert</option>
       </select>
+      {errors.description && (
+        <p className="text-rose-800">This field is required!</p>
+      )}
       <textarea
         type="text"
         placeholder="Course Description"
         className={`${styles.tealBg} textarea w-full mb-4 text-white`}
-        {...register("description")}
+        {...register("description", { required: true })}
       />
       <div className="grid md:grid-cols-2 gap-4">
         <input
           type="number"
           placeholder="Seats"
           className={`${styles.tealBg} input w-full mb-4 text-white`}
-          {...register("sits")}
+          {...register("sits", { required: true })}
         />
         <input
           type="text"
@@ -176,21 +174,26 @@ export default function CourseDetails({
       </div>
       <div className={`my-4 rounded-lg text-white`}>
         {tags.map((tag, index) => (
-          <div key={index} className="flex gap-4 mb-4">
-            <input
-              type="text"
-              placeholder="Tag"
-              className={`${styles.tealBg} input w-full text-white`}
-              value={tag.name}
-              onChange={(e) => handleTagChange(index, e.target.value)}
-            />
-            <button
-              className={`bg-rose-800 p-4 rounded-full text-white`}
-              type="button"
-              onClick={() => handleRemoveTag(index)}
-            >
-              <MdClose />
-            </button>
+          <div key={index}>
+            {errors.tags && errors.tags[index] && errors.tags[index].name && (
+              <p className="text-rose-800">This field is required!</p>
+            )}
+            <div className="flex gap-4 mb-4">
+              <input
+                type="text"
+                placeholder="Tag"
+                className={`${styles.tealBg} input w-full text-white`}
+                value={tag.name}
+                onChange={(e) => handleTagChange(index, e.target.value)}
+              />
+              <button
+                className={`bg-rose-800 p-4 rounded-full text-white`}
+                type="button"
+                onClick={() => handleRemoveTag(index)}
+              >
+                <MdClose />
+              </button>
+            </div>
           </div>
         ))}
         <button
