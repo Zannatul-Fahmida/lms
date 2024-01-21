@@ -122,7 +122,7 @@ export default function DashboardNavbar({ isSidebarOpen, toggleSidebar }) {
               </Link>
             )
           }
-          {user.role !== "admin" && (
+          {user?.role !== "admin" && (
             <>
               <Link href="/dashboard/analytics">
                 <li
