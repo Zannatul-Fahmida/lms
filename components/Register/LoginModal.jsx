@@ -19,7 +19,6 @@ export default function LoginModal({
   const [forgotModalOpen, setForgotModalOpen] = useState(false);
   const [formError, setFormError] = useState("");
 
-
   const handleClose = () => {
     router.push("/");
     setLoginModalOpen(false);
@@ -76,7 +75,7 @@ export default function LoginModal({
   };
   useEffect(() => {
     token && redirectDashboard(user);
-  }, [user]);
+  }, [user, token]);
 
   const onSubmit = (data) => {
     const { username, password } = data;

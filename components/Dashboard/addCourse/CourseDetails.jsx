@@ -1,5 +1,6 @@
 import { MdClose } from "react-icons/md";
-import styles from "../../styles/Dashboard.module.css";
+import styles from "../../../styles/Dashboard.module.css";
+import { useForm, useWatch } from "react-hook-form";
 
 export default function CourseDetails({
   requirements,
@@ -63,7 +64,7 @@ export default function CourseDetails({
             {...register("endDate", { required: true })}
           />
         </label>
-        <label className="w-full">
+        <label className="w-full mb-4">
           <div className="label">
             <span className="label-text text-white">Category</span>
           </div>

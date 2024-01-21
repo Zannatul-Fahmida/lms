@@ -99,7 +99,7 @@ export default function Navbar() {
       // }
     };
     fetchCat();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div

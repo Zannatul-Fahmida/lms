@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DashboardNavbar from "../../../components/Shared/DashboardNavbar";
 import styles from "../../../styles/Dashboard.module.css";
-import AddCourseForm from "../../../components/Dashboard/AddCourseForm";
+import AddCourseForm from "../../../components/Dashboard/addCourse/AddCourseForm";
 
 export default function AddCourse() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);

@@ -1,5 +1,5 @@
 import { MdClose } from "react-icons/md";
-import styles from "../../styles/Dashboard.module.css";
+import styles from "../../../styles/Dashboard.module.css";
 
 export default function InstructorDetails({
   register,

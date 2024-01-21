@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import styles from "../../styles/Dashboard.module.css";
+import styles from "../../../styles/Dashboard.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -38,7 +38,6 @@ export default function AddCourseForm() {
   const [tags, setTags] = useState([{ name: "" }]);
   const { user, token } = useSelector((state) => state.auth);
   const [categories, setCategories] = useState([]);
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {

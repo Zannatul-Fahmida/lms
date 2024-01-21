@@ -60,7 +60,7 @@ export default function TopCourses() {
       dispatch(setAllCourses(response.data.data.result));
     };
     fetchTopCourse();
-  }, []);
+  }, [dispatch]);
   return (
     <div
       className={`${styles.courseBg} text-center text-white px-12 md:px-24 py-20`}
