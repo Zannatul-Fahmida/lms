@@ -38,6 +38,36 @@ export default function AddCourseForm() {
   const [tags, setTags] = useState([{ name: "" }]);
   const { user, token } = useSelector((state) => state.auth);
   const [categories, setCategories] = useState([]);
+  const [newCategoryName, setNewCategoryName] = useState('')
+
+  const addNewCategory = async (newCategoryName) => {
+    try {
+      const existingCategory = categories?.data?.find(
+        (category) => category.name === newCategoryName
+      );
+  
+      if (existingCategory) {
+        return existingCategory._id;
+      }
+  
+      const response = await axios.post(
+        "https://online-learning-platform-backend.vercel.app/api/categories",
+        { name: newCategoryName },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        }
+      );
+      
+      return response.data._id;
+    } catch (error) {
+      console.error("Error creating or checking category:", error);
+      return null;
+    }
+  };  
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -244,6 +274,9 @@ export default function AddCourseForm() {
           handleRemoveTag={handleRemoveTag}
           handleAddTag={handleAddTag}
           categories={categories}
+          setNewCategoryName={setNewCategoryName}
+          newCategoryName={newCategoryName}
+          addNewCategory={addNewCategory}
           errors={errors}
         />
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>

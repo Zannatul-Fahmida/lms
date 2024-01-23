@@ -1,6 +1,7 @@
 import { MdClose } from "react-icons/md";
 import styles from "../../../styles/Dashboard.module.css";
-import { useForm, useWatch } from "react-hook-form";
+import { FaPlus } from "react-icons/fa";
+import { TiTick } from "react-icons/ti";
 
 export default function CourseDetails({
   requirements,
@@ -17,6 +18,9 @@ export default function CourseDetails({
   handleRequirementChange,
   handleBenefitChange,
   categories,
+  setNewCategoryName,
+  newCategoryName,
+  addNewCategory,
   errors,
 }) {
   return (
@@ -68,19 +72,56 @@ export default function CourseDetails({
           <div className="label">
             <span className="label-text text-white">Category</span>
           </div>
-          <select
-            className={`${styles.tealBg} select w-full text-white`}
-            {...register("categoryId", { required: true })}
-          >
-            <option disabled selected>
-              Pick a category
-            </option>
-            {categories?.data?.map((category) => (
-              <option key={category._id} value={category._id}>
-                {category.name}
+          <div className="flex">
+            <select
+            style={{
+              borderTopRightRadius: 0,
+              borderBottomRightRadius: 0
+            }}
+              className={`${styles.tealBg} select w-full text-white`}
+              {...register("categoryId", { required: true })}
+            >
+              <option disabled selected>
+                Pick a category
               </option>
-            ))}
-          </select>
+              {categories?.data?.map((category) => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            <button
+            style={{
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0
+            }}
+              className="btn bg-green-500 text-white p-4 border-0 hover:bg-green-600"
+              onClick={() => document.getElementById("my_modal_2").showModal()}
+            >
+              <FaPlus />
+            </button>
+            <dialog id="my_modal_2" className="modal">
+              <div className="modal-box">
+                <h3 className="font-bold text-lg">Add new category</h3>
+                <input
+                  type="text"
+                  className="my-4 input w-full border-slate-200"
+                  placeholder="Enter your category here"
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                />
+                <button
+                  className="btn bg-green-500 text-white p-4 border-0 hover:bg-green-600"
+                  onClick={() => addNewCategory(newCategoryName)}
+                >
+                  Add
+                  <TiTick />
+                </button>
+              </div>
+              <form method="dialog" className="modal-backdrop">
+                <button>close</button>
+              </form>
+            </dialog>
+          </div>
         </label>
       </div>
       <select
