@@ -125,16 +125,15 @@ export default function Navbar() {
             </svg>
           </label>
           <ul
-            tabIndex={0}
             className={`${styles.tealBg} menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52`}
           >
             <li>
-              <p>Categories</p>
-              <div className="p-2">
+              <p className="hover:text-white">Categories</p>
+              <div className="flex flex-col p-2 hover:text-white">
                 {categories?.map((item, index) => (
                   <p
                     key={index}
-                    className={`${styles.darkTealBg} rounded-lg my-2 py-2`}
+                    className={`${styles.darkTealBg} rounded-lg my-2 py-2 w-full text-center`}
                   >
                     <Link
                       href={`/categories/${item.name
@@ -194,32 +193,32 @@ export default function Navbar() {
         </Link>
         <div className="hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            <li tabIndex={0}>
-              <details>
-                <summary className="hover:text-white">Categories</summary>
-                <div
-                  style={{ backgroundColor: "#0f959cbb" }}
-                  className="grid grid-cols-2 gap-3 w-96"
+          <li tabIndex={0}>
+          <details style={{ position: 'relative', zIndex: '1' }}>
+            <summary className="hover:text-white">Categories</summary>
+            <div
+              style={{ backgroundColor: "#0f959cbb", position: 'absolute', top: '100%', left: '0', minWidth: '100%' }}
+              className="grid grid-cols-2 gap-3 w-96 p-2 rounded-lg"
+            >
+              {categories?.map((item, index) => (
+                <p
+                  key={index}
+                  className={`${styles.tealTransparentBg} rounded-lg p-2 dropdown-content`}
                 >
-                  {categories?.map((item, index) => (
-                    <p
-                      key={index}
-                      className={`${styles.tealTransparentBg} rounded-lg`}
-                    >
-                      <Link
-                        href={`/categories/${item.name
-                          .toLowerCase()
-                          .split(" ")
-                          .join("-")}`}
-                        className="hover:text-slate-300"
-                      >
-                        {item.name}
-                      </Link>
-                    </p>
-                  ))}
-                </div>
-              </details>
-            </li>
+                  <Link
+                    href={`/categories/${item.name
+                      .toLowerCase()
+                      .split(" ")
+                      .join("-")}`}
+                    className="hover:text-slate-300"
+                  >
+                    {item.name}
+                  </Link>
+                </p>
+              ))}
+            </div>
+          </details>
+        </li>        
           </ul>
         </div>
       </div>
