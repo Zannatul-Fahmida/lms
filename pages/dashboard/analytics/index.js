@@ -18,7 +18,7 @@ export default function Analytics() {
         style={{ backgroundColor: "#03353C" }}
         className={`${
           isSidebarOpen ? "ml-64" : "ml-12"
-        } transition-all flex-grow p-4 md:h-screen`}
+        } transition-all flex-grow p-4 min-h-screen`}
       >
         <div className="text-white">
           <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4 w-full">

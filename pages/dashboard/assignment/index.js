@@ -13,6 +13,13 @@ export default function Assignment() {
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
       />
+      <div
+        style={{ backgroundColor: "#03353C" }}
+        className={`${
+          isSidebarOpen ? "ml-64" : "ml-12"
+        } transition-all flex-grow p-4 min-h-screen`}
+      >
+      </div>
     </div>
   );
 }

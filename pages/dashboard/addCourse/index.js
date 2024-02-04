@@ -19,7 +19,7 @@ export default function AddCourse() {
         style={{ backgroundColor: "#03353C" }}
         className={`${
           isSidebarOpen ? "ml-64" : "ml-12"
-        } transition-all flex-grow p-4 md:min-h-screen`}
+        } transition-all flex-grow p-4 min-h-screen`}
       >
         <h4 className="text-xl font-semibold text-white">Add new course</h4>
         <div className={`${styles.skyBlueBg} my-4 rounded-lg`}>
